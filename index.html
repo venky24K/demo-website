@@ -3,35 +3,34 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Smart Legal Drafting – Established UI</title>
+<title>Neti Tharam Advocate – Legal Services</title>
 <style>
 :root{
-  --bg:#0f172a; --panel:#0b1220; --ink:#e2e8f0; --muted:#94a3b8;
-  --ring:rgba(148,163,184,.25); --pri:#22c55e; --pri2:#34d399; --acc:#60a5fa; --warn:#f59e0b; --danger:#ef4444;
+  --bg:#ffffff; --panel:#f8f9fa; --ink:#212529; --muted:#6c757d;
+  --ring:rgba(0,0,0,.1); --pri:#0d6efd; --pri2:#0b5ed7; --acc:#198754; --warn:#ffc107; --danger:#dc3545;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:
-radial-gradient(70% 100% at 50% 0%, #0b1220 0%, #090f1b 60%, #070b13 100%); color:var(--ink)}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#ffffff; color:var(--ink)}
 a{color:inherit;text-decoration:none}
 .container{max-width:1100px;margin:0 auto;padding:24px}
-.header{position:sticky;top:0;z-index:50;background:rgba(11,18,32,.75);backdrop-filter:blur(10px);border-bottom:1px solid var(--ring)}
+.header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.98);backdrop-filter:blur(10px);border-bottom:1px solid var(--ring);box-shadow:0 1px 3px rgba(0,0,0,.1)}
 .header-inner{display:flex;align-items:center;gap:14px;padding:12px 24px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800}
 .logo-badge{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--pri),var(--acc))}
 .nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
-.nav button{padding:8px 12px;border-radius:10px;border:1px solid transparent;color:#cbd5e1;background:transparent;cursor:pointer}
-.nav button:hover{border-color:var(--ring);color:#fff}
+.nav button{padding:8px 12px;border-radius:10px;border:1px solid var(--ring);color:var(--ink);background:transparent;cursor:pointer}
+.nav button:hover{background:var(--panel);}
 .stepbar{display:flex;gap:8px;flex-wrap:wrap;margin:8px 24px 0 24px}
-.step{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--ring);color:#94a3b8;font-size:12px;white-space:nowrap}
-.step.active{border-color:#93c5fd;color:#bfdbfe;background:rgba(59,130,246,.12)}
-.step.done{border-color:#86efac;color:#bbf7d0;background:rgba(34,197,94,.08)}
+.step{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--ring);color:var(--muted);font-size:12px;white-space:nowrap}
+.step.active{border-color:var(--pri);color:var(--pri);background:rgba(13,110,253,.1)}
+.step.done{border-color:var(--acc);color:var(--acc);background:rgba(25,135,84,.1)}
 .main{padding:20px 24px 120px}
 .grid{display:grid;gap:16px}
 .grid-2{grid-template-columns:1.2fr .8fr}
 .grid-3{grid-template-columns:repeat(3,1fr)}
 @media(max-width:980px){.grid-2,.grid-3{grid-template-columns:1fr}}
-.card{background:linear-gradient(180deg,rgba(15,23,42,.7),rgba(2,6,23,.7));border:1px solid var(--ring);border-radius:18px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.card{background:#ffffff;border:1px solid var(--ring);border-radius:18px;padding:20px;box-shadow:0 2px 10px rgba(0, 0, 0, 0.05)}
 .card h1,.card h2,.card h3{margin:.2rem 0 .8rem}
 .sub{color:var(--muted);font-size:14px}
 .row{display:flex;gap:10px;flex-wrap:wrap}
@@ -40,9 +39,9 @@ a{color:inherit;text-decoration:none}
 .btn-accent{background:linear-gradient(135deg,#60a5fa,#93c5fd);color:#041427}
 .btn-outline{border-color:var(--ring);color:var(--ink);background:transparent}
 .btn-outline:hover{border-color:#64748b}
-.badge{border:1px solid var(--ring);color:#cbd5e1;padding:4px 8px;border-radius:999px;font-size:12px}
+.badge{border:1px solid var(--ring);color:var(--ink);padding:4px 8px;border-radius:999px;font-size:12px;background:var(--panel)}
 .inputs{display:grid;gap:10px;max-width:560px}
-.input,.select,.file,textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ring);background:#0b1220;color:var(--ink)}
+.input,.select,.file,textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ring);background:#ffffff;color:var(--ink)}
 .helper{font-size:12px;color:var(--muted);margin-top:6px}
 hr{border:none;border-top:1px solid var(--ring);margin:16px 0}
 .hidden{display:none !important}
@@ -69,15 +68,15 @@ hr{border:none;border-top:1px solid var(--ring);margin:16px 0}
 .footer .container{display:flex;gap:10px;align-items:center;justify-content:space-between}
 .small{font-size:12px;color:var(--muted)}
 .table{width:100%;border-collapse:separate;border-spacing:0 8px}
-.table th{font-size:12px;color:#9ca3af;text-align:left;padding:4px 6px}
-.table td{padding:8px 6px;border:1px solid var(--ring);background:#0b1220}
+.table th{font-size:12px;color:var(--muted);text-align:left;padding:4px 6px}
+.table td{padding:8px 6px;border:1px solid var(--ring);background:var(--panel)}
 </style>
 </head>
 <body>
   <!-- HEADER -->
   <div class="header">
     <div class="header-inner container">
-      <div class="logo"><span class="logo-badge"></span> Smart Legal Drafting</div>
+      <div class="logo"><span class="logo-badge"></span> Neti Tharam Advocate</div>
       <nav class="nav">
         <button data-nav="home">Home</button>
         <button data-nav="docs">Documents</button>
@@ -92,6 +91,7 @@ hr{border:none;border-top:1px solid var(--ring);margin:16px 0}
         <button data-nav="notary">Notary</button>
         <button data-nav="delivery">Delivery</button>
         <button id="toggleEmails">📧 Emails</button>
+        <button data-nav="privacy">Privacy Policy</button>
       </nav>
     </div>
     <div class="stepbar container" id="stepbar"></div>
@@ -381,6 +381,54 @@ hr{border:none;border-top:1px solid var(--ring);margin:16px 0}
         </div>
       </div>
     </section>
+    <!-- Privacy Policy Section -->
+    <section id="privacy" class="section">
+      <div class="card">
+        <h1>Privacy Policy</h1>
+        <p class="sub">Last Updated: August 22, 2025</p>
+        
+        <h2>1. Information We Collect</h2>
+        <p>We collect information that you provide directly to us when you use our services, including when you create an account, upload documents, or communicate with us. This may include:</p>
+        <ul>
+          <li>Personal identification information (name, email address, contact details)</li>
+          <li>Document content and metadata</li>
+          <li>Billing and payment information</li>
+          <li>Communication preferences</li>
+        </ul>
+
+        <h2>2. How We Use Your Information</h2>
+        <p>We use the information we collect to:</p>
+        <ul>
+          <li>Provide, maintain, and improve our services</li>
+          <li>Process transactions and send related information</li>
+          <li>Respond to your comments, questions, and requests</li>
+          <li>Send technical notices, updates, and support messages</li>
+          <li>Monitor and analyze trends, usage, and activities</li>
+        </ul>
+
+        <h2>3. Data Security</h2>
+        <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized or unlawful processing, accidental loss, destruction, or damage.</p>
+
+        <h2>4. Third-Party Services</h2>
+        <p>We may employ third-party companies and individuals to facilitate our services, provide services on our behalf, or assist us in analyzing how our services are used. These third parties have access to your personal information only to perform these tasks on our behalf.</p>
+
+        <h2>5. Your Rights</h2>
+        <p>Depending on your location, you may have certain rights regarding your personal information, including:</p>
+        <ul>
+          <li>Access to your personal information</li>
+          <li>Correction of inaccurate or incomplete information</li>
+          <li>Deletion of your personal information</li>
+          <li>Restriction or objection to processing</li>
+          <li>Data portability</li>
+        </ul>
+
+        <h2>6. Changes to This Policy</h2>
+        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
+
+        <h2>7. Contact Us</h2>
+        <p>If you have any questions about this Privacy Policy, please contact us at privacy@smartlegaldrafting.com</p>
+      </div>
+    </section>
   </main>
 
   <!-- TOAST + MODAL + EMAIL TRAY -->
@@ -409,7 +457,7 @@ hr{border:none;border-top:1px solid var(--ring);margin:16px 0}
   <!-- FOOTER -->
   <div class="footer">
     <div class="container">
-      <div class="small">©️ 2025 Smart Legal Drafting · IT Act compliant e-Sign · Govt e-Stamp integrated · Notary network</div>
+      <div class="small">©️ 2025 Neti Tharam Advocate · IT Act compliant e-Sign · Govt e-Stamp integrated · Notary network</div>
       <div class="row small"><span>Support: support@smartdraft.example</span><span> | </span><span>+91-99999-00000</span></div>
     </div>
   </div>
@@ -418,7 +466,8 @@ hr{border:none;border-top:1px solid var(--ring);margin:16px 0}
 /* ------------ DATA ------------ */
 const steps = [
   'Home','Documents','Client Info','Upload','Pricing & Payment','Draft',
-  'Advocate Review','Client Review','e-Sign','e-Stamp','Notary','Delivery'
+  'Advocate Review','Client Review','e-Sign','e-Stamp','Notary','Delivery',
+  'Privacy Policy'
 ];
 const docsData = [
   {name:'Rental Agreement', cat:'property', needs:{stamp:true, esign:true, notary:false}},

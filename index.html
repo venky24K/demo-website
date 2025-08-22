@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Smart Legal Drafting – Established UI</title>
+<style>
+:root{
+  --bg:#0f172a; --panel:#0b1220; --ink:#e2e8f0; --muted:#94a3b8;
+  --ring:rgba(148,163,184,.25); --pri:#22c55e; --pri2:#34d399; --acc:#60a5fa; --warn:#f59e0b; --danger:#ef4444;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:
+radial-gradient(70% 100% at 50% 0%, #0b1220 0%, #090f1b 60%, #070b13 100%); color:var(--ink)}
+a{color:inherit;text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.header{position:sticky;top:0;z-index:50;background:rgba(11,18,32,.75);backdrop-filter:blur(10px);border-bottom:1px solid var(--ring)}
+.header-inner{display:flex;align-items:center;gap:14px;padding:12px 24px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800}
+.logo-badge{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--pri),var(--acc))}
+.nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.nav button{padding:8px 12px;border-radius:10px;border:1px solid transparent;color:#cbd5e1;background:transparent;cursor:pointer}
+.nav button:hover{border-color:var(--ring);color:#fff}
+.stepbar{display:flex;gap:8px;flex-wrap:wrap;margin:8px 24px 0 24px}
+.step{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--ring);color:#94a3b8;font-size:12px;white-space:nowrap}
+.step.active{border-color:#93c5fd;color:#bfdbfe;background:rgba(59,130,246,.12)}
+.step.done{border-color:#86efac;color:#bbf7d0;background:rgba(34,197,94,.08)}
+.main{padding:20px 24px 120px}
+.grid{display:grid;gap:16px}
+.grid-2{grid-template-columns:1.2fr .8fr}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:980px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(15,23,42,.7),rgba(2,6,23,.7));border:1px solid var(--ring);border-radius:18px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.card h1,.card h2,.card h3{margin:.2rem 0 .8rem}
+.sub{color:var(--muted);font-size:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid transparent;cursor:pointer;font-weight:700}
+.btn-primary{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#052a13}
+.btn-accent{background:linear-gradient(135deg,#60a5fa,#93c5fd);color:#041427}
+.btn-outline{border-color:var(--ring);color:var(--ink);background:transparent}
+.btn-outline:hover{border-color:#64748b}
+.badge{border:1px solid var(--ring);color:#cbd5e1;padding:4px 8px;border-radius:999px;font-size:12px}
+.inputs{display:grid;gap:10px;max-width:560px}
+.input,.select,.file,textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--ring);background:#0b1220;color:var(--ink)}
+.helper{font-size:12px;color:var(--muted);margin-top:6px}
+hr{border:none;border-top:1px solid var(--ring);margin:16px 0}
+.hidden{display:none !important}
+.section{display:none}
+.section.active{display:block}
+.list{display:grid;gap:12px}
+.doc-card{padding:14px;border:1px solid var(--ring);border-radius:14px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;cursor:pointer}
+.doc-card:hover{border-color:#6b7280}
+.kpi{display:flex;gap:16px}
+.kpi .val{font-size:26px;font-weight:800}
+.toast{position:fixed;right:20px;top:20px;z-index:1000;display:none;background:linear-gradient(135deg,#1f2937,#111827);border:1px solid var(--ring);color:#e5e7eb;padding:12px 14px;border-radius:12px;min-width:260px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,.6);backdrop-filter:blur(4px);display:none;z-index:900}
+.modal{position:fixed;inset:0;display:none;justify-content:center;align-items:center;z-index:1000}
+.modal-card{width:min(560px,92vw);background:#0b1220;border:1px solid var(--ring);border-radius:18px;padding:20px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+.timeline{border-left:2px solid var(--ring);padding-left:12px;display:grid;gap:8px}
+.time-item{position:relative}
+.time-item::before{content:'●';position:absolute;left:-16px;top:0;color:#86efac}
+.time-meta{font-size:12px;color:#9ca3af}
+.pill{font-size:12px;padding:4px 8px;border-radius:999px;border:1px solid var(--ring);color:#cbd5e1}
+.email-tray{position:fixed;bottom:20px;right:20px;width:min(360px,92vw);max-height:50vh;overflow:auto;background:#0b1220;border:1px solid var(--ring);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:10px;display:none;z-index:850}
+.email-item{background:#0f172a;border:1px solid var(--ring);border-radius:10px;padding:10px;margin-bottom:8px}
+.footer{position:fixed;left:0;right:0;bottom:0;background:rgba(11,18,32,.9);border-top:1px solid var(--ring);backdrop-filter:blur(6px);padding:8px 6px}
+.footer .container{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.small{font-size:12px;color:var(--muted)}
+.table{width:100%;border-collapse:separate;border-spacing:0 8px}
+.table th{font-size:12px;color:#9ca3af;text-align:left;padding:4px 6px}
+.table td{padding:8px 6px;border:1px solid var(--ring);background:#0b1220}
+</style>
+</head>
+<body>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-inner container">
+      <div class="logo"><span class="logo-badge"></span> Smart Legal Drafting</div>
+      <nav class="nav">
+        <button data-nav="home">Home</button>
+        <button data-nav="docs">Documents</button>
+        <button data-nav="client">Client Info</button>
+        <button data-nav="upload">Upload</button>
+        <button data-nav="pricing">Pricing & Payment</button>
+        <button data-nav="draft">Draft</button>
+        <button data-nav="advocate">Advocate</button>
+        <button data-nav="clientReview">Client Review</button>
+        <button data-nav="esign">e-Sign</button>
+        <button data-nav="estamp">e-Stamp</button>
+        <button data-nav="notary">Notary</button>
+        <button data-nav="delivery">Delivery</button>
+        <button id="toggleEmails">📧 Emails</button>
+      </nav>
+    </div>
+    <div class="stepbar container" id="stepbar"></div>
+  </div>
+
+  <main class="main container">
+    <!-- HOME -->
+    <section id="home" class="section active">
+      <div class="grid grid-2">
+        <div class="card">
+          <h1>Draft legal documents with confidence</h1>
+          <p class="sub">Transparent · Verified · Lawyer-assisted · Real-time tracking</p>
+          <div class="row" style="margin-top:12px">
+            <span class="badge">Aadhaar e-Sign</span>
+            <span class="badge">Govt e-Stamp</span>
+            <span class="badge">Registered Notary</span>
+          </div>
+          <hr/>
+          <div class="kpi">
+            <div><div class="val">50+</div><div class="small">Documents</div></div>
+            <div><div class="val">2–15m</div><div class="small">Digital stamping</div></div>
+            <div><div class="val">24–48h</div><div class="small">Hard copy delivery</div></div>
+          </div>
+          <div class="row" style="margin-top:14px">
+            <button class="btn btn-primary" data-nav="docs">Start drafting</button>
+            <button class="btn btn-outline" data-nav="pricing">See pricing</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Why each step matters</h3>
+          <ul class="sub">
+            <li><b>Advocate review</b> ensures legal compliance & reduces disputes.</li>
+            <li><b>Aadhaar e-Sign</b> is valid under the IT Act, 2000.</li>
+            <li><b>e-Stamp</b> replaces physical stamp paper with a verifiable certificate.</li>
+            <li><b>Notary</b> adds recognized attestation where required (e.g., PoA).</li>
+          </ul>
+          <hr/>
+          <div class="row">
+            <span class="pill">ISO-style security</span>
+            <span class="pill">Audit trail packaged</span>
+            <span class="pill">24x7 support</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOCUMENTS -->
+    <section id="docs" class="section">
+      <div class="card">
+        <h2>Choose a document</h2>
+        <p class="sub">Filter by category and pick a document. Workflow adapts automatically.</p>
+        <div class="row" style="margin:8px 0">
+          <select id="docCategory" class="select" style="max-width:220px">
+            <option value="all">All categories</option>
+            <option value="property">Property</option>
+            <option value="business">Business</option>
+            <option value="personal">Personal</option>
+            <option value="employment">Employment</option>
+          </select>
+          <input id="docSearch" class="input" placeholder="Search documents (e.g., Rental, NDA, Will)" style="max-width:340px" />
+        </div>
+        <div id="docList" class="list"></div>
+        <hr/>
+        <div class="row">
+          <button class="btn btn-outline" data-nav="home">Back</button>
+          <button class="btn btn-primary" data-nav="client">Continue</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLIENT INFO -->
+    <section id="client" class="section">
+      <div class="card">
+        <h2>Client information</h2>
+        <div class="inputs">
+          <input id="fullName" class="input" placeholder="Full name" />
+          <input id="idNumber" class="input" placeholder="PAN / Aadhaar number" />
+          <input id="address" class="input" placeholder="Full address" />
+          <textarea id="extra" rows="3" class="input" placeholder="Any special clauses or notes?"></textarea>
+        </div>
+        <div class="helper">We use encryption and never share your data.</div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn btn-outline" data-nav="docs">Back</button>
+          <button class="btn btn-primary" data-nav="upload">Save & continue</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- UPLOAD -->
+    <section id="upload" class="section">
+      <div class="card">
+        <h2>Upload documents</h2>
+        <div class="inputs">
+          <input id="fileInput" class="file" type="file" multiple />
+          <div id="filePreview" class="sub"></div>
+        </div>
+        <div class="helper">Accepted: PDF/JPG/PNG up to 10MB each.</div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn btn-outline" data-nav="client">Back</button>
+          <button id="uploadBtn" class="btn btn-primary">Upload & continue</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING & PAYMENT -->
+    <section id="pricing" class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>Plans</h2>
+          <div class="inputs">
+            <select id="plan" class="select">
+              <option value="499">Basic Draft · ₹499 + Govt fees</option>
+              <option value="1499">Lawyer Verified · ₹1499 + Govt fees</option>
+              <option value="2499">Premium (Priority) · ₹2499 + Govt fees</option>
+            </select>
+            <div class="row">
+              <select id="state" class="select" style="flex:1">
+                <option value="KA">Karnataka</option>
+                <option value="MH">Maharashtra</option>
+                <option value="DL">Delhi</option>
+                <option value="TN">Tamil Nadu</option>
+                <option value="WB">West Bengal</option>
+              </select>
+              <input id="consideration" class="input" style="flex:1" type="number" min="0" placeholder="Consideration (₹)" />
+            </div>
+            <div class="sub">Stamp-duty estimate is illustrative; actual duty applied at payment.</div>
+          </div>
+          <hr/>
+          <table class="table">
+            <thead><tr><th>Breakup</th><th>Amount (₹)</th></tr></thead>
+            <tbody>
+              <tr><td>Plan fee</td><td id="planFee">499</td></tr>
+              <tr><td>GST (18%)</td><td id="gstFee">89.82</td></tr>
+              <tr><td>Estimated stamp duty</td><td id="stampDuty">100</td></tr>
+              <tr><td><b>Total</b></td><td id="totalFee"><b>688.82</b></td></tr>
+            </tbody>
+          </table>
+          <div class="row" style="margin-top:12px">
+            <button class="btn btn-outline" data-nav="home">Back</button>
+            <button id="payBtn" class="btn btn-primary">Pay now</button>
+          </div>
+          <div class="helper">We never store card details. Aadhaar OTP for e-Sign happens after payment.</div>
+        </div>
+        <div class="card">
+          <h3>What you get</h3>
+          <ul class="sub">
+            <li>Draft generation + advocate review</li>
+            <li>Aadhaar e-Sign (IT Act compliant)</li>
+            <li>Government e-Stamp certificate</li>
+            <li>Notary & final delivery (PDF + hard copy)</li>
+          </ul>
+          <hr/>
+          <h3>Live timeline</h3>
+          <div id="timeline" class="timeline sub"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DRAFT PREVIEW -->
+    <section id="draft" class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>Draft generated</h2>
+          <p class="sub">Preview is watermarked. Advocate can add comments before you sign.</p>
+          <div class="row" style="margin:10px 0"><span class="pill" id="selectedDocPill">No document selected</span></div>
+          <div class="row">
+            <button class="btn btn-accent" data-nav="advocate">Send to Advocate</button>
+            <button class="btn btn-outline" data-nav="pricing">Back to Pricing</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Preview</h3>
+          <div class="sub" style="border:1px dashed var(--ring);border-radius:10px;padding:10px;min-height:140px">
+            <b>Title:</b> <span id="draftTitle">—</span><br/>
+            <b>Parties:</b> <span id="draftParties">—</span><br/>
+            <b>Clauses:</b> Arbitration · Term · Confidentiality · Termination<br/>
+            <i>(Watermarked preview)</i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ADVOCATE REVIEW -->
+    <section id="advocate" class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>Advocate review</h2>
+          <p class="sub">A registered advocate verifies clauses, compliance and signatures.</p>
+          <div class="inputs">
+            <textarea id="advNotes" rows="5" class="input" placeholder="Advocate comments (auto-filled for demo)"></textarea>
+          </div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn btn-outline" data-nav="draft">Back</button>
+            <button id="advVerifyBtn" class="btn btn-primary">Mark Verified & Notify Client</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Suggested edits</h3>
+          <ul class="sub" id="advEdits">
+            <li>Clarify late payment penalty to 2% monthly interest.</li>
+            <li>Add jurisdiction clause to Bengaluru courts.</li>
+            <li>Ensure e-stamp equals state-specific rate for tenancy duration.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLIENT REVIEW -->
+    <section id="clientReview" class="section">
+      <div class="card">
+        <h2>Client final review</h2>
+        <p class="sub">Review the advocate-verified draft. Approve to proceed to e-Sign.</p>
+        <div class="row" style="margin-top:12px">
+          <button class="btn btn-outline" data-nav="advocate">Back</button>
+          <button id="clientApproveBtn" class="btn btn-primary">Approve & proceed</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- e-SIGN -->
+    <section id="esign" class="section">
+      <div class="card">
+        <h2>Aadhaar e-Sign</h2>
+        <p class="sub">Enter OTP sent to your Aadhaar-linked mobile to sign digitally.</p>
+        <div class="row" style="margin-top:12px">
+          <button class="btn btn-outline" data-nav="clientReview">Back</button>
+          <button id="esignBtn" class="btn btn-primary">Send OTP & e-Sign</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- e-STAMP -->
+    <section id="estamp" class="section">
+      <div class="card">
+        <h2>Apply e-Stamp</h2>
+        <div class="inputs">
+          <select id="stampAmount" class="select" style="max-width:240px">
+            <option value="100">₹100</option>
+            <option value="200">₹200</option>
+            <option value="500">₹500</option>
+            <option value="1000">₹1000</option>
+          </select>
+          <div class="helper">Estimate based on document & state. Final certificate is attached.</div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn btn-outline" data-nav="esign">Back</button>
+          <button id="estampBtn" class="btn btn-primary">Apply e-Stamp</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOTARY -->
+    <section id="notary" class="section">
+      <div class="card">
+        <h2>Notary</h2>
+        <p class="sub">A registered notary affixes digital seal & certificate.</p>
+        <div class="row" style="margin-top:12px">
+          <button class="btn btn-outline" data-nav="estamp">Back</button>
+          <button id="notaryBtn" class="btn btn-primary">Confirm Notary completion</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DELIVERY -->
+    <section id="delivery" class="section">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>Final delivery</h2>
+          <ul class="sub">
+            <li id="chk-adv">✅ Advocate Verified</li>
+            <li id="chk-client">✅ Client Approved</li>
+            <li id="chk-esign">✅ e-Signed</li>
+            <li id="chk-estamp">✅ e-Stamped</li>
+            <li id="chk-notary">✅ Notarized</li>
+          </ul>
+          <div class="row" style="margin-top:12px">
+            <button class="btn btn-outline" data-nav="home">Back to Home</button>
+            <button id="downloadBtn" class="btn btn-accent">Download final PDF</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Offline delivery</h3>
+          <p class="sub">A certified hard copy will be couriered in 24–48 hours. Tracking ID will be emailed.</p>
+          <div class="row">
+            <span class="pill" id="trackingPill">No tracking yet</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- TOAST + MODAL + EMAIL TRAY -->
+  <div id="toast" class="toast"></div>
+  <div id="backdrop" class="modal-backdrop"></div>
+  <div id="modal" class="modal">
+    <div class="modal-card">
+      <h3 id="modalTitle">Title</h3>
+      <p id="modalBody" class="sub">Body</p>
+      <input id="modalInput" class="input hidden" placeholder="Enter OTP" />
+      <div class="modal-actions">
+        <button id="modalCancel" class="btn btn-outline">Cancel</button>
+        <button id="modalConfirm" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="emails" class="email-tray">
+    <div class="row" style="align-items:center;justify-content:space-between;margin-bottom:6px">
+      <b>Sent Emails</b>
+      <button id="closeEmails" class="btn btn-outline" style="padding:6px 10px">Close</button>
+    </div>
+    <div id="emailList"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="container">
+      <div class="small">©️ 2025 Smart Legal Drafting · IT Act compliant e-Sign · Govt e-Stamp integrated · Notary network</div>
+      <div class="row small"><span>Support: support@smartdraft.example</span><span> | </span><span>+91-99999-00000</span></div>
+    </div>
+  </div>
+
+<script>
+/* ------------ DATA ------------ */
+const steps = [
+  'Home','Documents','Client Info','Upload','Pricing & Payment','Draft',
+  'Advocate Review','Client Review','e-Sign','e-Stamp','Notary','Delivery'
+];
+const docsData = [
+  {name:'Rental Agreement', cat:'property', needs:{stamp:true, esign:true, notary:false}},
+  {name:'Leave & License', cat:'property', needs:{stamp:true, esign:true, notary:false}},
+  {name:'Sale Deed (Draft)', cat:'property', needs:{stamp:true, esign:false, notary:true}},
+  {name:'Power of Attorney', cat:'property', needs:{stamp:false, esign:false, notary:true}},
+  {name:'NDA (Mutual)', cat:'business', needs:{stamp:false, esign:true, notary:false}},
+  {name:'Partnership Deed', cat:'business', needs:{stamp:true, esign:true, notary:false}},
+  {name:'Founders Agreement', cat:'business', needs:{stamp:false, esign:true, notary:false}},
+  {name:'Employment Agreement', cat:'employment', needs:{stamp:false, esign:true, notary:false}},
+  {name:'Consultant Agreement', cat:'employment', needs:{stamp:false, esign:true, notary:false}},
+  {name:'Will & Testament', cat:'personal', needs:{stamp:false, esign:false, notary:true}},
+  {name:'Gift Deed (Draft)', cat:'personal', needs:{stamp:true, esign:false, notary:true}},
+  {name:'Affidavit', cat:'personal', needs:{stamp:true, esign:false, notary:true}},
+];
+const dutyRates = { // simple illustrative estimator (per ₹1 lakh of consideration)
+  KA: 0.005, MH: 0.006, DL: 0.004, TN: 0.0055, WB: 0.005
+};
+
+let appState = {
+  selectedDoc: null,
+  client: {name:'', id:'', addr:'', notes:''},
+  uploads: [],
+  planFee: 499,
+  gst: 0,
+  stamp: 100,
+  total: 0,
+  timeline: [], // {event, time}
+  flags: {paid:false, advocate:false, clientApproved:false, esign:false, estamp:false, notary:false, tracking:''}
+};
+
+/* ------------ HELPERS ------------ */
+const $ = (sel)=>document.querySelector(sel);
+function showToast(msg){ const t=$("#toast"); t.textContent=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2600); }
+function timeNow(){ const d=new Date(); return d.toLocaleString(); }
+function pushEvent(event){ appState.timeline.unshift({event,time:timeNow()}); renderTimeline(); }
+function openModal(title, body, {otp=false, confirmText='Confirm', onConfirm}={}){
+  $("#modalTitle").textContent=title; $("#modalBody").textContent=body;
+  const inp=$("#modalInput"); if(otp){ inp.classList.remove('hidden'); inp.value=''; inp.placeholder='Enter OTP'; } else { inp.classList.add('hidden'); }
+  const back=$("#backdrop"), m=$("#modal"); back.style.display='block'; m.style.display='flex';
+  $("#modalCancel").onclick=()=>{ back.style.display='none'; m.style.display='none'; };
+  $("#modalConfirm").textContent=confirmText;
+  $("#modalConfirm").onclick=()=>{ back.style.display='none'; m.style.display='none'; if(onConfirm) onConfirm(inp.value); };
+}
+function goto(sectionId){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+  renderStepbar(sectionId);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function renderStepbar(sectionId){
+  const order=['home','docs','client','upload','pricing','draft','advocate','clientReview','esign','estamp','notary','delivery'];
+  const idx = order.indexOf(sectionId);
+  const bar = $("#stepbar"); bar.innerHTML = '';
+  steps.forEach((name,i)=>{
+    const div=document.createElement('div'); div.className='step'+(i<idx?' done':i===idx?' active':''); div.textContent=name;
+    bar.appendChild(div);
+  });
+}
+function addEmail(subject, body){
+  const el = document.createElement('div'); el.className='email-item';
+  el.innerHTML = `<b>${subject}</b><div class="small">${timeNow()}</div><div class="sub">${body}</div>`;
+  $("#emailList").prepend(el);
+}
+
+/* ------------ DOCS RENDER ------------ */
+function renderDocs(){
+  const list=$("#docList"); list.innerHTML='';
+  const cat=$("#docCategory").value, q=$("#docSearch").value.toLowerCase();
+  docsData.filter(d=>{
+    const matchCat = (cat==='all') || (d.cat===cat);
+    const matchQ = !q || d.name.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  }).forEach(d=>{
+    const card=document.createElement('div'); card.className='doc-card';
+    const tags = [];
+    if(d.needs.stamp) tags.push('<span class="badge">e-Stamp</span>');
+    if(d.needs.esign) tags.push('<span class="badge">e-Sign</span>');
+    if(d.needs.notary) tags.push('<span class="badge">Notary</span>');
+    card.innerHTML = `
+      <div>
+        <b>${d.name}</b><div class="small">${d.cat.toUpperCase()}</div>
+        <div class="row" style="margin-top:6px">${tags.join(' ')}</div>
+      </div>
+      <button class="btn btn-outline">Select</button>
+    `;
+    card.onclick=()=>{ appState.selectedDoc = d; showToast(`Selected: ${d.name}`); goto('client'); updateDraftPreview(); };
+    list.appendChild(card);
+  });
+}
+
+/* ------------ PRICING CALC ------------ */
+function recalc(){
+  const plan = Number($("#plan").value||499);
+  const gst = +(plan*0.18).toFixed(2);
+  const state = $("#state").value;
+  const cons = Math.max(0, Number($("#consideration").value||0));
+  const duty = cons>0 ? Math.max(100, +(cons * (dutyRates[state]||0.005)).toFixed(2)) : 100;
+  const total = +(plan + gst + duty).toFixed(2);
+  appState.planFee = plan; appState.gst = gst; appState.stamp = duty; appState.total = total;
+  $("#planFee").textContent = plan.toFixed(2);
+  $("#gstFee").textContent = gst.toFixed(2);
+  $("#stampDuty").textContent = duty.toFixed(2);
+  $("#totalFee").innerHTML = `<b>${total.toFixed(2)}</b>`;
+}
+
+/* ------------ TIMELINE ------------ */
+function renderTimeline(){
+  const t = $("#timeline"); t.innerHTML='';
+  appState.timeline.forEach(x=>{
+    const div = document.createElement('div'); div.className='time-item';
+    div.innerHTML = `<div>${x.event}</div><div class="time-meta">${x.time}</div>`;
+    t.appendChild(div);
+  });
+}
+
+/* ------------ DRAFT PREVIEW ------------ */
+function updateDraftPreview(){
+  $("#selectedDocPill").textContent = appState.selectedDoc ? appState.selectedDoc.name : 'No document selected';
+  $("#draftTitle").textContent = appState.selectedDoc ? appState.selectedDoc.name : '—';
+  $("#draftParties").textContent = appState.client.name ? appState.client.name+' & Counterparty' : 'Client & Counterparty';
+}
+
+/* ------------ BINDINGS ------------ */
+document.querySelectorAll('[data-nav]').forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    const id = e.currentTarget.getAttribute('data-nav');
+    if(id==='pricing') recalc();
+    if(id==='docs') renderDocs();
+    goto(id);
+  });
+});
+
+$("#docCategory").addEventListener('change', renderDocs);
+$("#docSearch").addEventListener('input', renderDocs);
+
+["plan","state","consideration"].forEach(id=> $("#"+id).addEventListener('input', recalc));
+
+$("#uploadBtn").addEventListener('click', ()=>{
+  const files = Array.from($("#fileInput").files||[]);
+  appState.uploads = files.map(f=>f.name);
+  $("#filePreview").textContent = files.length ? `Uploaded: ${files.map(x=>'“'+x+'”').join(', ')}` : 'No files selected (demo continues)';
+  showToast('Documents uploaded & scanned');
+  pushEvent('Documents uploaded');
+  goto('pricing');
+});
+
+$("#payBtn").addEventListener('click', ()=>{
+  openModal('Payment OTP','Enter the 6-digit OTP to complete payment.',{otp:true,confirmText:'Verify & pay', onConfirm:(otp)=>{
+    appState.flags.paid = true; pushEvent(`Payment successful (₹${appState.total.toFixed(2)})`);
+    addEmail('Payment receipt','Your payment was successful. Receipt attached.');
+    showToast('Payment successful. Receipt emailed.');
+    goto('draft');
+  }});
+});
+
+$("#advVerifyBtn").addEventListener('click', ()=>{
+  const notes=$("#advNotes").value.trim() || 'Reviewed. Clauses adjusted for compliance.';
+  appState.flags.advocate = true; pushEvent('Advocate verified draft');
+  addEmail('Advocate verification complete', 'Your draft has been verified. Notes: '+notes);
+  showToast('Advocate Verified. Email sent to client.');
+  goto('clientReview');
+});
+
+$("#clientApproveBtn").addEventListener('click', ()=>{
+  appState.flags.clientApproved = true; pushEvent('Client approved the draft');
+  addEmail('Client approval recorded','You have approved the advocate-verified draft.');
+  showToast('Client approved. Proceed to e-Sign.');
+  goto('esign');
+});
+
+$("#esignBtn").addEventListener('click', ()=>{
+  openModal('Aadhaar e-Sign','Enter Aadhaar-linked OTP to e-sign.',{otp:true,confirmText:'e-Sign',onConfirm:(otp)=>{
+    appState.flags.esign = true; pushEvent('e-Sign completed (IT Act compliant)');
+    addEmail('Document e-Signed','Your document has been digitally signed.');
+    showToast('e-Sign complete');
+    goto('estamp');
+  }});
+});
+
+$("#estampBtn").addEventListener('click', ()=>{
+  const amt = Number($("#stampAmount").value||100);
+  appState.flags.estamp = true; pushEvent(`e-Stamp applied (₹${amt})`);
+  addEmail('e-Stamp certificate attached', `Government e-Stamp (₹${amt}) attached to your document.`);
+  showToast('e-Stamp applied');
+  goto('notary');
+});
+
+$("#notaryBtn").addEventListener('click', ()=>{
+  appState.flags.notary = true; pushEvent('Notary completed (digital seal)');
+  addEmail('Notary completed','Registered notary has affixed digital seal & certificate.');
+  showToast('Notary completed. Email sent.');
+  goto('delivery');
+  // mark checks
+  $("#chk-adv").textContent = (appState.flags.advocate?'✅':'⬜') + ' Advocate Verified';
+  $("#chk-client").textContent = (appState.flags.clientApproved?'✅':'⬜') + ' Client Approved';
+  $("#chk-esign").textContent = (appState.flags.esign?'✅':'⬜') + ' e-Signed';
+  $("#chk-estamp").textContent = (appState.flags.estamp?'✅':'⬜') + ' e-Stamped';
+  $("#chk-notary").textContent = (appState.flags.notary?'✅':'⬜') + ' Notarized';
+  // tracking
+  const tid = 'SD-'+Math.random().toString(36).slice(2,8).toUpperCase();
+  appState.flags.tracking = tid;
+  $("#trackingPill").textContent = 'Tracking ID: '+tid;
+  addEmail('Courier dispatched','Hard copy dispatched. Tracking ID: '+tid);
+});
+
+$("#downloadBtn").addEventListener('click', ()=>{
+  showToast('Download started. A copy has been emailed.');
+  addEmail('Final documents ready','Your verified, signed & stamped PDF is ready to download.');
+  pushEvent('Final PDF downloaded');
+});
+
+$("#toggleEmails").addEventListener('click', ()=> $("#emails").style.display='block');
+$("#closeEmails").addEventListener('click', ()=> $("#emails").style.display='none');
+
+/* nav from address bar hash (optional) */
+window.addEventListener('hashchange', ()=>{
+  const id = location.hash.replace('#','');
+  if(id && document.getElementById(id)) goto(id);
+});
+
+/* INIT */
+(function init(){
+  renderDocs();
+  renderStepbar('home');
+  // Seed advocate notes
+  $("#advNotes").value = `1) Add explicit late fee clause (2% per month)\n2) Define jurisdiction\n3) Verify party IDs & addresses`;
+  // Pre-fill example client after payment
+  document.addEventListener('click', (e)=>{
+    if(e.target.matches('[data-nav="upload"]')){
+      appState.client = {
+        name: $("#fullName").value || 'Client Name',
+        id: $("#idNumber").value || 'XXXX-XXXX-XXXX',
+        addr: $("#address").value || 'Client address',
+        notes: $("#extra").value || ''
+      };
+      updateDraftPreview();
+      pushEvent('Client info saved');
+    }
+  });
+})();
+</script>
+</body>
+</html>
